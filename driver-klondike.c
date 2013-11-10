@@ -1427,7 +1427,7 @@ static void get_klondike_statline_before(char *buf, size_t siz, struct cgpu_info
 	for (dev = 0; dev <= slaves; dev++) {
 		if (klninfo->status[dev].kline.ws.temp < temp)
 			temp = klninfo->status[dev].kline.ws.temp;
-		fan += klninfo->cfg[dev].kline.cfg.fantarget;
+		fan += klninfo->cfg[dev].kline.ws.fanspeed; 
 		clock += (uint16_t)K_HASHCLOCK(klninfo->cfg[dev].kline.cfg.hashclock);
 	}
 	rd_unlock(&(klninfo->stat_lock));
@@ -1469,8 +1469,13 @@ static struct api_data *klondike_api_stats(struct cgpu_info *klncgpu)
 		sprintf(buf, "Clock %d", dev);
 		root = api_add_freq(root, buf, &dClk, true);
 
-		unsigned int iFan = (unsigned int)100 * klninfo->cfg[dev].kline.cfg.fantarget / 255;
-		sprintf(buf, "Fan Percent %d", dev);
+		unsigned int iFan = (unsigned int)klninfo->cfg[dev].kline.ws.fanspeed;
+                sprintf(buf, "Fan Raw %d", dev);
+		root = api_add_int(root, buf, (int *)(&iFan), true);
+
+		iFan = 100 * iFan / 255;
+
+		sprintf(buf, "Fan Speed %% %d", dev);
 		root = api_add_int(root, buf, (int *)(&iFan), true);
 
 		iFan = 0;

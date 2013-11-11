@@ -2057,6 +2057,8 @@ static void ascstatus(struct io_data *io_data, int asc, bool isjson, bool precom
 
 		struct cgpu_info *cgpu = get_devices(dev);
 		float temp = cgpu->temp;
+                unsigned int fan = cgpu->fan;
+
 		struct timeval now;
 		double dev_runtime;
 
@@ -2085,6 +2087,7 @@ static void ascstatus(struct io_data *io_data, int asc, bool isjson, bool precom
 		root = api_add_string(root, "Enabled", enabled, false);
 		root = api_add_string(root, "Status", status, false);
 		root = api_add_temp(root, "Temperature", &temp, false);
+                root = api_add_int(root, "Fan Percent", &fan, false);
 		double mhs = cgpu->total_mhashes / dev_runtime;
 		root = api_add_mhs(root, "MHS av", &mhs, false);
 		char mhsname[27];

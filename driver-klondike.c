@@ -1462,8 +1462,11 @@ static struct api_data *klondike_api_stats(struct cgpu_info *klncgpu)
 	for (dev = 0; dev <= slaves; dev++) {
 
 		float fTemp = cvtKlnToC(klninfo->status[dev].kline.ws.temp);
+                klncgpu->temp = fTemp;
 		sprintf(buf, "Temp %d", dev);
-		root = api_add_temp(root, buf, &fTemp, true);
+		root = api_add_temp(root, "Temperature", &fTemp, true);
+
+		root = api_add_temp(root, "Test Temp", &klncgpu->temp, true);
 
 		double dClk = (double)K_HASHCLOCK(klninfo->cfg[dev].kline.cfg.hashclock);
 		sprintf(buf, "Clock %d", dev);
@@ -1477,6 +1480,7 @@ static struct api_data *klondike_api_stats(struct cgpu_info *klncgpu)
 
 		sprintf(buf, "Fan Speed %% %d", dev);
 		root = api_add_int(root, buf, (int *)(&iFan), true);
+                klncgpu->fan = iFan;
 
 		iFan = 0;
 		if (klninfo->status[dev].kline.ws.fanspeed > 0)

@@ -548,6 +548,8 @@ struct cgpu_info {
 	float temp;
 	int cutofftemp;
 
+        unsigned int fan;
+
 #ifdef HAVE_ADL
 	bool has_adl;
 	struct gpu_adl adl;
